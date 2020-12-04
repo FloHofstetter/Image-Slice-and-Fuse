@@ -1,3 +1,4 @@
+from typing import Tuple, List
 from PIL import Image
 import numpy as np
 
@@ -30,10 +31,32 @@ def pad(image: Image.Image, horizontally: int = 0, vertically: int = 0) -> Image
     return image
 
 
+def img_slice(image: Image.Image, slices: int) -> List[Image.Image]:
+    """
+    Slice images in equal parts.
+
+    :param image: Image to be sliced.
+    :param slices: Amount of slices to produce.
+    :return: List of image slices.
+    """
+    image_array: np.ndarray = np.asarray(image)
+    image_h: int
+    image_w: int
+    image_h, image_w, _ = image_array.shape
+    array_slices: List[np.ndarray, ...] = []
+    for slice_h in range(slices):
+        for slice_v in range(slices):
+            image_slice = image_array[
+                (image_h // 2) * slice_v : (image_h // 2) * (slice_v + 1),
+                (image_w // 2) * slice_h : (image_w // 2) * (slice_h + 1),
+            ]
+            array_slices.append(image_slice)
+    image_slices = [Image.fromarray(array_slice) for array_slice in array_slices]
+    return image_slices
+
+
 def main():
-    image = Image.open("../Images/Original/rs01001.jpg")
-    image = pad(image, 72, 384)
-    image.save("../Images/Padded/rs01001.jpg", quality=100, subsampling=0)
+    pass
 
 
 if __name__ == "__main__":
