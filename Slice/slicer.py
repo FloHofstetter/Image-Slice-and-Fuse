@@ -3,7 +3,7 @@ from PIL import Image
 import numpy as np
 
 
-def pad(image: Image.Image, horizontally: int = 0, vertically: int = 0) -> Image.Image:
+def pad(image: Image.Image, vertically: int = 0, horizontally: int = 0) -> Image.Image:
     """
     Pad image equally on opposite sides.
 
@@ -14,19 +14,23 @@ def pad(image: Image.Image, horizontally: int = 0, vertically: int = 0) -> Image
     """
     image_array: np.ndarray
     image_array = np.asarray(image)
-    pad_left: int = vertically // 2
-    pad_top: int = horizontally // 2
+    if image_array.ndim < 3:
+        image_array = np.expand_dims(image_array, axis=2)
+    pad_top: int = vertically // 2
+    pad_left: int = horizontally // 2
     image_h: int
     image_w: int
     image_c: int
     image_h, image_w, image_c = image_array.shape
     padded_array: np.ndarray
     padded_array = np.zeros(
-        shape=(image_h + vertically, image_w + horizontally, image_c), dtype="uint8"
+        shape=(image_h + horizontally, image_w + vertically, image_c), dtype="uint8"
     )
     padded_array[
         pad_left : pad_left + image_h, pad_top : pad_top + image_w, :
     ] = image_array
+    if padded_array.shape[2] == 1:
+        padded_array = padded_array.squeeze(axis=2)
     image = Image.fromarray(padded_array)
     return image
 
@@ -42,6 +46,8 @@ def img_slice(image: Image.Image, slices: int) -> List[Image.Image]:
     image_array: np.ndarray = np.asarray(image)
     image_h: int
     image_w: int
+    if image_array.ndim < 3:
+        image_array = np.expand_dims(image_array, axis=2)
     image_h, image_w, _ = image_array.shape
     array_slices: List[np.ndarray, ...] = []
     for slice_h in range(slices):
@@ -50,6 +56,8 @@ def img_slice(image: Image.Image, slices: int) -> List[Image.Image]:
                 (image_h // 2) * slice_v : (image_h // 2) * (slice_v + 1),
                 (image_w // 2) * slice_h : (image_w // 2) * (slice_h + 1),
             ]
+            if image_slice.shape[2] == 1:
+                image_slice = image_slice.squeeze(axis=2)
             array_slices.append(image_slice)
     image_slices = [Image.fromarray(array_slice) for array_slice in array_slices]
     return image_slices
