@@ -3,6 +3,7 @@ from PIL import Image
 from Slice.slicer import pad, img_slice
 import os
 import sys
+from tqdm import tqdm
 
 
 def main():
@@ -11,7 +12,7 @@ def main():
     padding: Tuple[int] = (int(sys.argv[3]), int(sys.argv[4]))
     slices: int = int(sys.argv[5])
 
-    for file in os.listdir(img_path):
+    for file in tqdm(os.listdir(img_path)):
         if file.endswith(".jpg") or file.endswith(".png"):
             image = Image.open(os.path.join(img_path, file))
             image = pad(image, *padding) # 384, 72
