@@ -53,8 +53,8 @@ def img_slice(image: Image.Image, slices: int) -> List[Image.Image]:
     for slice_h in range(slices):
         for slice_v in range(slices):
             image_slice = image_array[
-                (image_h // 2) * slice_v : (image_h // 2) * (slice_v + 1),
-                (image_w // 2) * slice_h : (image_w // 2) * (slice_h + 1),
+                (image_h // slices) * slice_v : (image_h // slices) * (slice_v + 1),
+                (image_w // slices) * slice_h : (image_w // slices) * (slice_h + 1),
             ]
             if image_slice.shape[2] == 1:
                 image_slice = image_slice.squeeze(axis=2)
