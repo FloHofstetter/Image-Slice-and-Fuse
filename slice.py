@@ -21,7 +21,7 @@ def main():
                 file_name: str = os.path.splitext(file)[0]
                 file_ext: str = os.path.splitext(file)[1]
                 image_slice.save(
-                    os.path.join(slc_path, file_name + f"_{idx}" + file_ext),
+                    os.path.join(slc_path, file_name + f"FLO{idx}" + file_ext),
                     quality=100,
                     subsampling=0,
                 )
