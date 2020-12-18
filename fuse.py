@@ -24,7 +24,7 @@ def main():
 
     fused_name: Callable
     fused_name = lambda n: "_".join(n.split("_")[:-1]) + "." + n.split(".")[-1]
-    fused_image: Image.Image = Fusion.fuse(sliced_images)
+    fused_image: Image.Image = Fusion.fuser.fuse(sliced_images)
     fused_image.save(os.path.join(fus_path, fused_name(file)), quality=100, subsampling=0)
 
 
